@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 85%;
+            max-width: 400px;
+        }
+        .heart { font-size: 80px; margin-bottom: 20px; transition: 0.3s; }
+        h1 { color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.1); font-size: 1.8rem; }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; font-size: 1.2rem; }
+        #noBtn { background-color: #ffffff; color: #ff4d6d; }
+        #tryAgainBtn { background-color: #590d22; color: white; display: none; }
+        
+        #final-msg { display: none; margin-top: 20px; color: #590d22; font-weight: bold; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="heart" id="mainHeart">❤️</div>
+        <h1 id="question">Will you be my Valentine, Prasunita?</h1>
+        
+        <div class="btn-container">
+            <button id="yesBtn" onclick="celebrate()">YES!</button>
+            <button id="noBtn" onclick="handleNo()">No</button>
+            <button id="tryAgainBtn" onclick="resetPage()">Try Again 🔄</button>
+        </div>
+        
+        <p id="final-msg"></p>
+    </div>
+
+    <script>
+        let noCount = 0;
+        const questionText = document.getElementById("question");
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const tryAgainBtn = document.getElementById("tryAgainBtn");
+        const finalMsg = document.getElementById("final-msg");
+
+        function handleNo() {
+            if (noCount === 0) {
+                // First time clicking No
+                questionText.innerText = "Are you sure? 🥺";
+                noBtn.innerText = "Yes, I'm sure";
+                noCount++;
+            } else {
+                // Confirming the "No"
+                questionText.innerText = "Access Denied 🚫";
+                finalMsg.style.display = "block";
+                finalMsg.innerHTML = "Eto koshto koira website banaisi... <br> You don't get a second choice! 😂";
+                noBtn.style.display = "none";
+                yesBtn.style.display = "none";
+                tryAgainBtn.style.display = "inline-block";
+            }
+        }
+
+        function resetPage() {
+            // Resetting to force the "Yes"
+            noCount = 0;
+            questionText.innerText = "Will you be my Valentine? (Correct option only this time)";
+            finalMsg.style.display = "none";
+            tryAgainBtn.style.display = "none";
+            yesBtn.style.display = "inline-block";
+            yesBtn.style.transform = "scale(1.2)";
+            // The "No" button stays gone forever now!
+        }
+
+        function celebrate() {
+            questionText.innerText = "YAY! Best decision ever! ❤️🌹";
+            document.querySelector(".btn-container").style.display = "none";
+            finalMsg.style.display = "none";
+            document.getElementById("mainHeart").innerText = "💖";
+            
+            // Heart-colored Confetti
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) return clearInterval(interval);
+
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { 
+                particleCount, 
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                colors: ['#ff4d6d', '#ff758f']
+              }));
+              confetti(Object.assign({}, defaults, { 
+                particleCount, 
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                colors: ['#ff4d6d', '#ff758f']
+              }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
